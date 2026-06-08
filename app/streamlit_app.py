@@ -20,7 +20,7 @@ st.set_page_config(page_title="Local Document Intelligence", page_icon="📄", l
 
 st.title("Local Document Intelligence")
 
-extractor_name = st.sidebar.selectbox("Extractor", ["text", "paddleocr"])
+extractor_name = st.sidebar.selectbox("Extractor", ["text", "rapidocr", "paddleocr"])
 llm_name = st.sidebar.selectbox("LLM", ["heuristic", "ollama"])
 model_name = st.sidebar.text_input("Ollama model", "qwen2.5:1.5b")
 max_retries = st.sidebar.number_input("Repair attempts", min_value=0, max_value=5, value=2)
