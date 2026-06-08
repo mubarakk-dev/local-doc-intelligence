@@ -8,8 +8,10 @@ No document images or extracted text need to leave your machine.
 
 ## Why This Project Exists
 
-This project is built as an AI engineering portfolio piece for roles in London fintech,
-legaltech, accounting automation, insurance operations, and document-heavy scale-ups.
+Sensitive financial and legal documents should not have to leave a local machine just to
+be parsed into structured data. This project explores a fully local approach for UK
+invoices and receipts, with explicit validation and benchmark reporting rather than
+unverified model output.
 
 It demonstrates:
 
@@ -19,6 +21,21 @@ It demonstrates:
 - Validation and repair loops for unreliable model output.
 - Field-level benchmarking and failure analysis.
 - A lightweight CLI and Streamlit demo suitable for GitHub reviewers.
+
+## Tech Stack
+
+| Layer | Tools |
+| --- | --- |
+| Language | Python 3.10+ |
+| Packaging | Hatchling, pyproject.toml |
+| CLI | Typer, Rich |
+| UI | Streamlit |
+| OCR | RapidOCR, optional PaddleOCR |
+| Local LLM | Ollama with Qwen 2.5 0.5B |
+| Validation | Pydantic |
+| Evaluation | Field-level accuracy, numeric tolerance, string similarity |
+| Testing and linting | Pytest, Ruff |
+| CI | GitHub Actions |
 
 ## Architecture
 
@@ -71,6 +88,14 @@ Launch the local demo:
 
 ```powershell
 streamlit run app\streamlit_app.py
+```
+
+On Windows, if PowerShell blocks virtual environment activation, run the same commands
+through the venv executables:
+
+```powershell
+.venv\Scripts\python.exe -m pip install -e ".[dev,ui]"
+.venv\Scripts\streamlit.exe run app\streamlit_app.py
 ```
 
 ## Optional Local LLM Setup
@@ -162,4 +187,3 @@ overall             1.00
 
 See [docs/project_structure.md](docs/project_structure.md) for the package layout and
 [docs/benchmark_workflow.md](docs/benchmark_workflow.md) for the benchmark workflow.
-See [docs/portfolio_notes.md](docs/portfolio_notes.md) for interview talking points.

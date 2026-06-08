@@ -36,7 +36,9 @@ donut = [
   "sentencepiece>=0.2"
 ]
 ui = [
-  "streamlit>=1.36"
+  "streamlit>=1.36",
+  "rapidocr-onnxruntime>=1.4",
+  "opencv-python>=4.5"
 ]
 dev = [
   "pytest>=8.2",
