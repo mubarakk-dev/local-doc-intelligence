@@ -1,0 +1,14 @@
+TAX INVOICE
+
+Thames Analytics Limited
+81 Borough High Street
+London
+SE1 1DN
+
+Invoice No: TA-4588
+Invoice Date: 03/02/2026
+VAT Number: 987654321
+
+Subtotal: GBP 1,250.00
+VAT: GBP 250.00
+Total: GBP 1,500.00

@@ -1,0 +1,14 @@
+VAT RECEIPT
+
+City Office Supplies
+4 Clerkenwell Road
+London
+EC1M 5PQ
+
+VAT Number: GB222333444
+Receipt Number: COS-772
+Date: 18/04/2026
+
+Subtotal: £42.50
+VAT: £8.50
+Total: £51.00

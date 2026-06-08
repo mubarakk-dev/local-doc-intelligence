@@ -1,0 +1,130 @@
+[
+  {
+    "file": "data/samples/invoice_001.txt",
+    "expected": {
+      "document_type": "invoice",
+      "supplier_name": "Acme Services Ltd",
+      "supplier_address": "10 Example Street, London, EC1A 1AA",
+      "vat_number": "GB123456789",
+      "invoice_number": "INV-2026-001",
+      "invoice_date": "2026-01-31",
+      "subtotal_gbp": 100.0,
+      "vat_amount_gbp": 20.0,
+      "total_amount_gbp": 120.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  },
+  {
+    "file": "data/samples/invoice_002_commas.txt",
+    "expected": {
+      "document_type": "invoice",
+      "supplier_name": "Thames Analytics Limited",
+      "supplier_address": "81 Borough High Street, London, SE1 1DN",
+      "vat_number": "GB987654321",
+      "invoice_number": "TA-4588",
+      "invoice_date": "2026-02-03",
+      "subtotal_gbp": 1250.0,
+      "vat_amount_gbp": 250.0,
+      "total_amount_gbp": 1500.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  },
+  {
+    "file": "data/samples/invoice_003_no_vat.txt",
+    "expected": {
+      "document_type": "invoice",
+      "supplier_name": "Brighton Legal Support",
+      "supplier_address": "14 Temple Avenue, London, EC4Y 0DA",
+      "vat_number": null,
+      "invoice_number": "BLS-2026-044",
+      "invoice_date": "2026-03-12",
+      "subtotal_gbp": null,
+      "vat_amount_gbp": null,
+      "total_amount_gbp": 450.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  },
+  {
+    "file": "data/samples/receipt_001_cafe.txt",
+    "expected": {
+      "document_type": "receipt",
+      "supplier_name": "Northbank Coffee Ltd",
+      "supplier_address": "22 Market Road, London, N1 6AB",
+      "vat_number": null,
+      "invoice_number": "RCPT-8821",
+      "invoice_date": "2026-04-05",
+      "subtotal_gbp": null,
+      "vat_amount_gbp": null,
+      "total_amount_gbp": 6.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  },
+  {
+    "file": "data/samples/receipt_002_vat.txt",
+    "expected": {
+      "document_type": "receipt",
+      "supplier_name": "City Office Supplies",
+      "supplier_address": "4 Clerkenwell Road, London, EC1M 5PQ",
+      "vat_number": "GB222333444",
+      "invoice_number": "COS-772",
+      "invoice_date": "2026-04-18",
+      "subtotal_gbp": 42.5,
+      "vat_amount_gbp": 8.5,
+      "total_amount_gbp": 51.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  },
+  {
+    "file": "data/samples/invoice_004_bill_to_first.txt",
+    "expected": {
+      "document_type": "invoice",
+      "supplier_name": "Ledger Lane Bookkeeping",
+      "supplier_address": "9 Fleet Street, London, EC4Y 1AA",
+      "vat_number": "GB555666777",
+      "invoice_number": "LLB-9001",
+      "invoice_date": "2026-05-02",
+      "subtotal_gbp": 700.0,
+      "vat_amount_gbp": 140.0,
+      "total_amount_gbp": 840.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  },
+  {
+    "file": "data/samples/invoice_005_noisy_ocr.txt",
+    "expected": {
+      "document_type": "invoice",
+      "supplier_name": "West End Catering Co",
+      "supplier_address": "55 0xford Street, L0ndon, W1D 2LT",
+      "vat_number": "GB333444555",
+      "invoice_number": "WEC-118",
+      "invoice_date": "2026-05-27",
+      "subtotal_gbp": 300.0,
+      "vat_amount_gbp": 60.0,
+      "total_amount_gbp": 360.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  },
+  {
+    "file": "data/samples/invoice_006_reverse_charges.txt",
+    "expected": {
+      "document_type": "invoice",
+      "supplier_name": "Canary Wharf Data Services",
+      "supplier_address": "1 Canada Square, London, E14 5AB",
+      "vat_number": "GB444555666",
+      "invoice_number": "CWDS-2026-77",
+      "invoice_date": "2026-06-14",
+      "subtotal_gbp": null,
+      "vat_amount_gbp": 0.0,
+      "total_amount_gbp": 2000.0,
+      "currency": "GBP",
+      "confidence": 0.8
+    }
+  }
+]

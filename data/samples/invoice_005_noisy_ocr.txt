@@ -1,0 +1,14 @@
+INVOICE
+
+West End Catering Co
+55 0xford Street
+L0ndon
+W1D 2LT
+
+VAT Numher: GB333444555
+Invoice Number: WEC-118
+Invoice Date: 27 May 2026
+
+SubtotaI: £300.00
+VAT: £60.00
+TotaI: £360.00
