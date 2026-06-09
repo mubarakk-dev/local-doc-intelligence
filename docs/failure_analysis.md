@@ -61,3 +61,12 @@ Important OCR lesson:
 ## Degraded Synthetic Benchmark Notes
 
 The degraded image generator now applies rotation, lower resolution, blur, contrast loss, shadows, and noise. RapidOCR still handles these generated documents well, with the main remaining differences being minor spacing changes in postcodes and supplier names. This is encouraging, but it is not a real-world accuracy claim; the next test set should use photographed or scanned documents with natural camera artifacts.
+
+## Photo-Style Synthetic Benchmark Notes
+
+The photo-style image tier applies a desk-like background, page rotation, shadow, blur,
+noise, and camera-style framing. RapidOCR plus Qwen 0.5B scores 0.98 overall on this tier.
+
+The main observed weakness is spacing and grouping in OCR text. Examples include merged
+supplier names such as `TAXINVOICE` and postcodes such as `SE11DN`. This mostly affects
+supplier name and address similarity rather than core numeric fields.

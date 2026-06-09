@@ -279,11 +279,14 @@ def generate_synthetic_dataset(
     ground_truth_path: Path = Path("data/ground_truth.json"),
     image_dir: Path = Path("data/sample_images"),
     degraded_image_dir: Path | None = None,
+    photo_image_dir: Path | None = None,
 ) -> list[dict[str, object]]:
     samples_dir.mkdir(parents=True, exist_ok=True)
     image_dir.mkdir(parents=True, exist_ok=True)
     if degraded_image_dir is not None:
         degraded_image_dir.mkdir(parents=True, exist_ok=True)
+    if photo_image_dir is not None:
+        photo_image_dir.mkdir(parents=True, exist_ok=True)
 
     ground_truth = []
     for index, document in enumerate(SYNTHETIC_DOCUMENTS):
@@ -294,6 +297,9 @@ def generate_synthetic_dataset(
         if degraded_image_dir is not None:
             degraded_path = degraded_image_dir / f"{document.file_stem}.png"
             render_degraded_image(image_path, degraded_path, index=index)
+        if photo_image_dir is not None:
+            photo_path = photo_image_dir / f"{document.file_stem}.png"
+            render_photo_style_image(image_path, photo_path, index=index)
         ground_truth.append(
             {
                 "file": str(text_path).replace("\\", "/"),
@@ -366,3 +372,51 @@ def draw_shadow(image: Image.Image, index: int) -> None:
     else:
         draw.rectangle((0, int(height * 0.68), width, height), fill=(0, 0, 0, 24))
     image.paste(Image.alpha_composite(image.convert("RGBA"), overlay).convert("RGB"))
+
+def render_photo_style_image(source_path: Path, output_path: Path, index: int) -> None:
+    paper = Image.open(source_path).convert("RGB")
+    paper = ImageEnhance.Brightness(paper).enhance(0.98)
+    paper = ImageEnhance.Contrast(paper).enhance(0.92)
+
+    scale = [0.66, 0.62, 0.64, 0.6][index % 4]
+    paper = paper.resize(
+        (int(paper.width * scale), int(paper.height * scale)),
+        Image.Resampling.BICUBIC,
+    )
+    paper = paper.filter(ImageFilter.GaussianBlur(radius=0.18 + 0.06 * (index % 3)))
+
+    background = make_photo_background((1500, 1050), index=index)
+    shadow = Image.new("RGBA", paper.size, (0, 0, 0, 90))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=18))
+
+    angle = [-7.0, 5.5, -5.8, 6.4, -6.2, 4.9, -5.2, 7.2][index % 8]
+    paper_rgba = paper.convert("RGBA")
+    rotated_shadow = shadow.rotate(angle, expand=True, resample=Image.Resampling.BICUBIC)
+    rotated_paper = paper_rgba.rotate(
+        angle,
+        expand=True,
+        resample=Image.Resampling.BICUBIC,
+        fillcolor=(0, 0, 0, 0),
+    )
+
+    x = 130 + 35 * (index % 3)
+    y = 95 + 25 * (index % 4)
+    background.paste(rotated_shadow, (x + 28, y + 32), rotated_shadow)
+    background.paste(rotated_paper, (x, y), rotated_paper)
+
+    background = ImageEnhance.Brightness(background).enhance(0.94)
+    background = background.filter(ImageFilter.GaussianBlur(radius=0.15))
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    background.save(output_path, optimize=True)
+
+
+def make_photo_background(size: tuple[int, int], index: int) -> Image.Image:
+    base_colours = [(170, 162, 148), (155, 151, 142), (178, 170, 154), (148, 143, 134)]
+    image = Image.new("RGB", size, base_colours[index % len(base_colours)])
+    noise = Image.effect_noise(size, 18 + 4 * (index % 3)).convert("L").convert("RGB")
+    image = Image.blend(image, noise, 0.08)
+    overlay = Image.new("RGBA", size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+    draw.ellipse((-240, -220, 760, 620), fill=(255, 255, 255, 34))
+    draw.rectangle((0, int(size[1] * 0.72), size[0], size[1]), fill=(0, 0, 0, 32))
+    return Image.alpha_composite(image.convert("RGBA"), overlay).convert("RGB")

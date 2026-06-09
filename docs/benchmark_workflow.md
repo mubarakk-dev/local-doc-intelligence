@@ -52,6 +52,12 @@ Run the degraded image OCR pipeline:
 .venv\Scripts\docintel.exe evaluate data\ground_truth.json --predictions outputs\qwen_0_5b_degraded_ocr_predictions.json
 ```
 
+Run the photo-style image OCR pipeline:
+
+```powershell
+.venv\Scripts\docintel.exe batch data\sample_images_photo --pattern *.png --extractor rapidocr --llm ollama --model qwen2.5:0.5b --output outputs\qwen_0_5b_photo_ocr_predictions.json
+.venv\Scripts\docintel.exe evaluate data\ground_truth.json --predictions outputs\qwen_0_5b_photo_ocr_predictions.json
+```
 ## Current Results
 
 | Backend | Documents | Overall |
@@ -60,6 +66,7 @@ Run the degraded image OCR pipeline:
 | Ollama Qwen 2.5 0.5B on text | 8 | 1.00 |
 | RapidOCR + Ollama Qwen 2.5 0.5B on images | 8 | 1.00 |
 | RapidOCR + Ollama Qwen 2.5 0.5B on degraded synthetic images | 8 | 1.00 |
+| RapidOCR + Ollama Qwen 2.5 0.5B on photo-style synthetic images | 8 | 0.98 |
 
 ## What This Demonstrates
 

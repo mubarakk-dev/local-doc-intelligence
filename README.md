@@ -165,6 +165,7 @@ Current synthetic benchmark:
 | Ollama Qwen 2.5 0.5B on text | 8 | 1.00 |
 | RapidOCR + Ollama Qwen 2.5 0.5B on images | 8 | 1.00 |
 | RapidOCR + Ollama Qwen 2.5 0.5B on degraded synthetic images | 8 | 1.00 |
+| RapidOCR + Ollama Qwen 2.5 0.5B on photo-style synthetic images | 8 | 0.98 |
 
 Example output:
 

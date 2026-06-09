@@ -139,18 +139,29 @@ def generate_samples(
         Path("data/sample_images_degraded"),
         help="Output directory for degraded PNG previews.",
     ),
+    include_photo_style: bool = typer.Option(
+        False,
+        help="Also generate photo-style PNG previews for OCR stress testing.",
+    ),
+    photo_image_dir: Path = typer.Option(
+        Path("data/sample_images_photo"),
+        help="Output directory for photo-style PNG previews.",
+    ),
 ) -> None:
     records = generate_synthetic_dataset(
         samples_dir=samples_dir,
         ground_truth_path=ground_truth,
         image_dir=image_dir,
         degraded_image_dir=degraded_image_dir if include_degraded else None,
+        photo_image_dir=photo_image_dir if include_photo_style else None,
     )
     console.print(f"Generated [bold]{len(records)}[/bold] synthetic documents.")
     console.print(f"Text fixtures: [bold]{samples_dir}[/bold]")
     console.print(f"Image previews: [bold]{image_dir}[/bold]")
     if include_degraded:
         console.print(f"Degraded image previews: [bold]{degraded_image_dir}[/bold]")
+    if include_photo_style:
+        console.print(f"Photo-style image previews: [bold]{photo_image_dir}[/bold]")
     console.print(f"Ground truth: [bold]{ground_truth}[/bold]")
 
 
