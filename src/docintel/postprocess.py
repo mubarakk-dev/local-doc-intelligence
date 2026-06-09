@@ -47,6 +47,9 @@ def enrich_missing_fields(
         elif amount is not None:
             updates[field] = amount
 
+
+    if document.confidence is None or document.confidence <= 0:
+        updates["confidence"] = estimate_confidence(document.model_copy(update=updates))
     meaningful_updates = {
         key: value
         for key, value in updates.items()
@@ -144,3 +147,18 @@ def contains_money(line: str) -> bool:
             re.IGNORECASE,
         )
     )
+
+
+
+def estimate_confidence(document: ExtractedDocument) -> float:
+    key_fields = [
+        document.document_type.value if document.document_type else None,
+        document.supplier_name,
+        document.supplier_address,
+        document.invoice_number,
+        document.invoice_date,
+        document.total_amount_gbp,
+        document.currency,
+    ]
+    present = sum(value is not None for value in key_fields)
+    return round(min(0.95, max(0.5, present / len(key_fields))), 2)

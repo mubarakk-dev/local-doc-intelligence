@@ -103,3 +103,39 @@ def test_reads_ocr_currency_marker_as_money() -> None:
     assert enriched.subtotal_gbp == 100.0
     assert enriched.vat_amount_gbp == 20.0
     assert enriched.total_amount_gbp == 120.0
+
+
+def test_estimates_confidence_when_model_returns_zero() -> None:
+    extraction = ExtractionResult(
+        source_path="invoice.png",
+        extractor_name="rapidocr",
+        full_text="\n".join(
+            [
+                "INVOICE",
+                "Acme Services Ltd",
+                "10 Example Street",
+                "London",
+                "EC1A 1AA",
+                "Invoice Number: INV-2026-001",
+                "Invoice Date: 31 January 2026",
+                "Total: f120.00",
+            ]
+        ),
+        blocks=[],
+    )
+    document = ExtractedDocument.model_validate(
+        {
+            "document_type": "invoice",
+            "supplier_name": "Acme Services Ltd",
+            "supplier_address": "10 Example Street, London, EC1A 1AA",
+            "invoice_number": "INV-2026-001",
+            "invoice_date": "2026-01-31",
+            "total_amount_gbp": 120.0,
+            "currency": "GBP",
+            "confidence": 0.0,
+        }
+    )
+
+    enriched = enrich_missing_fields(extraction, document)
+
+    assert enriched.confidence == 0.95
