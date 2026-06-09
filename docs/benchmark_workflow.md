@@ -45,6 +45,13 @@ Run the image OCR pipeline:
 .venv\Scripts\docintel.exe evaluate data\ground_truth.json --predictions outputs\qwen_0_5b_ocr_predictions.json
 ```
 
+Run the degraded image OCR pipeline:
+
+```powershell
+.venv\Scripts\docintel.exe batch data\sample_images_degraded --pattern *.png --extractor rapidocr --llm ollama --model qwen2.5:0.5b --output outputs\qwen_0_5b_degraded_ocr_predictions.json
+.venv\Scripts\docintel.exe evaluate data\ground_truth.json --predictions outputs\qwen_0_5b_degraded_ocr_predictions.json
+```
+
 ## Current Results
 
 | Backend | Documents | Overall |
@@ -52,6 +59,7 @@ Run the image OCR pipeline:
 | Heuristic fallback | 8 | 1.00 |
 | Ollama Qwen 2.5 0.5B on text | 8 | 1.00 |
 | RapidOCR + Ollama Qwen 2.5 0.5B on images | 8 | 1.00 |
+| RapidOCR + Ollama Qwen 2.5 0.5B on degraded synthetic images | 8 | 1.00 |
 
 ## What This Demonstrates
 
@@ -63,8 +71,7 @@ The benchmark is intentionally small, but it proves the system can run end to en
 - Measure field-level accuracy.
 - Compare local model behaviour against a deterministic baseline.
 
-The next benchmark target is to test harder PNG/JPG inputs and measure how extraction
-quality changes when the text layer becomes noisy.
-The current generated-image benchmark scores cleanly after OCR-aware normalization.
-The next target is harder image conditions: blur, rotation, shadows, perspective skew,
-and lower-resolution receipt photos.
+The current generated-image benchmarks score cleanly after OCR-aware normalization.
+The degraded synthetic set includes rotation, downsampling, blur, contrast loss, shadows,
+and noise. It is still generated data, so the next target is real photographed documents
+with natural perspective skew, compression artifacts, cluttered backgrounds, and varied layouts.

@@ -164,6 +164,7 @@ Current synthetic benchmark:
 | Heuristic fallback | 8 | 1.00 |
 | Ollama Qwen 2.5 0.5B on text | 8 | 1.00 |
 | RapidOCR + Ollama Qwen 2.5 0.5B on images | 8 | 1.00 |
+| RapidOCR + Ollama Qwen 2.5 0.5B on degraded synthetic images | 8 | 1.00 |
 
 Example output:
 
@@ -177,7 +178,7 @@ overall             1.00
 
 ## Roadmap
 
-- Test harder OCR inputs with blur, rotation, shadows, and lower resolution.
+- Test real photographed receipts and invoices with natural blur, shadows, perspective skew, and varied layouts.
 - Add a Donut OCR-free experimental extractor backend.
 - Add PDF page rendering.
 - Add confidence calibration from validation and model self-checks.

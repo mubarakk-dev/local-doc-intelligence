@@ -24,7 +24,7 @@ This file tracks what the pipeline struggles with as the benchmark set grows.
 
 ## Current OCR Benchmark Notes
 
-RapidOCR plus Qwen 0.5B scores 1.00 overall on the generated PNG benchmark.
+RapidOCR plus Qwen 0.5B scores 1.00 overall on both the clean generated PNG benchmark and the degraded synthetic PNG benchmark.
 
 Strong fields:
 
@@ -57,3 +57,7 @@ Important OCR lesson:
 - A low-contrast scan.
 - A document with missing VAT.
 - A document with multiple totals.
+
+## Degraded Synthetic Benchmark Notes
+
+The degraded image generator now applies rotation, lower resolution, blur, contrast loss, shadows, and noise. RapidOCR still handles these generated documents well, with the main remaining differences being minor spacing changes in postcodes and supplier names. This is encouraging, but it is not a real-world accuracy claim; the next test set should use photographed or scanned documents with natural camera artifacts.

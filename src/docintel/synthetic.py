@@ -4,7 +4,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 
 @dataclass(frozen=True)
@@ -33,9 +33,9 @@ Northbank Coffee Ltd
 22 Market Road
 London
 
-Subtotal: £100.00
-VAT: £20.00
-Total: £120.00
+Subtotal: \u00a3100.00
+VAT: \u00a320.00
+Total: \u00a3120.00
 """,
         expected={
             "document_type": "invoice",
@@ -94,8 +94,8 @@ EC4Y 0DA
 Invoice #: BLS-2026-044
 Date: 12 March 2026
 
-Professional services: £450.00
-Total: £450.00
+Professional services: \u00a3450.00
+Total: \u00a3450.00
 """,
         expected={
             "document_type": "invoice",
@@ -123,9 +123,9 @@ N1 6AB
 Receipt No: RCPT-8821
 Date: 05 April 2026
 
-Flat white £3.40
-Croissant £2.60
-Total: £6.00
+Flat white \u00a33.40
+Croissant \u00a32.60
+Total: \u00a36.00
 """,
         expected={
             "document_type": "receipt",
@@ -154,9 +154,9 @@ VAT Number: GB222333444
 Receipt Number: COS-772
 Date: 18/04/2026
 
-Subtotal: £42.50
-VAT: £8.50
-Total: £51.00
+Subtotal: \u00a342.50
+VAT: \u00a38.50
+Total: \u00a351.00
 """,
         expected={
             "document_type": "receipt",
@@ -191,9 +191,9 @@ VAT Number: GB555666777
 Invoice Number: LLB-9001
 Invoice Date: 2026-05-02
 
-Subtotal: £700.00
-VAT: £140.00
-Total: £840.00
+Subtotal: \u00a3700.00
+VAT: \u00a3140.00
+Total: \u00a3840.00
 """,
         expected={
             "document_type": "invoice",
@@ -222,9 +222,9 @@ VAT Numher: GB333444555
 Invoice Number: WEC-118
 Invoice Date: 27 May 2026
 
-SubtotaI: £300.00
-VAT: £60.00
-TotaI: £360.00
+SubtotaI: \u00a3300.00
+VAT: \u00a360.00
+TotaI: \u00a3360.00
 """,
         expected={
             "document_type": "invoice",
@@ -253,9 +253,9 @@ VAT Number: GB444555666
 Invoice Number: CWDS-2026-77
 Invoice Date: 14 June 2026
 
-Services: £2,000.00
-VAT: £0.00
-Total: £2,000.00
+Services: \u00a32,000.00
+VAT: \u00a30.00
+Total: \u00a32,000.00
 """,
         expected={
             "document_type": "invoice",
@@ -278,16 +278,22 @@ def generate_synthetic_dataset(
     samples_dir: Path = Path("data/samples"),
     ground_truth_path: Path = Path("data/ground_truth.json"),
     image_dir: Path = Path("data/sample_images"),
+    degraded_image_dir: Path | None = None,
 ) -> list[dict[str, object]]:
     samples_dir.mkdir(parents=True, exist_ok=True)
     image_dir.mkdir(parents=True, exist_ok=True)
+    if degraded_image_dir is not None:
+        degraded_image_dir.mkdir(parents=True, exist_ok=True)
 
     ground_truth = []
-    for document in SYNTHETIC_DOCUMENTS:
+    for index, document in enumerate(SYNTHETIC_DOCUMENTS):
         text_path = samples_dir / f"{document.file_stem}.txt"
         image_path = image_dir / f"{document.file_stem}.png"
         text_path.write_text(document.text.strip() + "\n", encoding="utf-8")
         render_text_image(document.text, image_path)
+        if degraded_image_dir is not None:
+            degraded_path = degraded_image_dir / f"{document.file_stem}.png"
+            render_degraded_image(image_path, degraded_path, index=index)
         ground_truth.append(
             {
                 "file": str(text_path).replace("\\", "/"),
@@ -325,3 +331,38 @@ def load_font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
         except OSError:
             continue
     return ImageFont.load_default()
+
+
+def render_degraded_image(source_path: Path, output_path: Path, index: int) -> None:
+    image = Image.open(source_path).convert("RGB")
+    angle = [-2.4, 1.7, -1.5, 2.1, -2.0, 1.3, -1.8, 2.5][index % 8]
+    image = image.rotate(
+        angle,
+        resample=Image.Resampling.BICUBIC,
+        expand=True,
+        fillcolor=(245, 245, 245),
+    )
+
+    width, height = image.size
+    scale = [0.72, 0.66, 0.7, 0.63][index % 4]
+    low_res = image.resize((int(width * scale), int(height * scale)), Image.Resampling.BILINEAR)
+    image = low_res.resize((width, height), Image.Resampling.BICUBIC)
+    image = image.filter(ImageFilter.GaussianBlur(radius=0.25 + 0.08 * (index % 3)))
+
+    image = ImageEnhance.Contrast(image).enhance(0.88)
+    image = ImageEnhance.Brightness(image).enhance(0.96)
+    draw_shadow(image, index=index)
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output_path, quality=70, optimize=True)
+
+
+def draw_shadow(image: Image.Image, index: int) -> None:
+    width, height = image.size
+    overlay = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+    if index % 2 == 0:
+        draw.rectangle((0, 0, int(width * 0.32), height), fill=(0, 0, 0, 28))
+    else:
+        draw.rectangle((0, int(height * 0.68), width, height), fill=(0, 0, 0, 24))
+    image.paste(Image.alpha_composite(image.convert("RGBA"), overlay).convert("RGB"))
