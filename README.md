@@ -84,6 +84,11 @@ Evaluate predictions against ground truth:
 docintel evaluate data\ground_truth.json --predictions outputs\heuristic_predictions.json
 ```
 
+Run the full benchmark suite with the local model:
+
+```powershell
+.venv\Scripts\python.exe -m docintel.cli benchmark --llm ollama --model qwen2.5:0.5b
+```
 Launch the local demo:
 
 ```powershell

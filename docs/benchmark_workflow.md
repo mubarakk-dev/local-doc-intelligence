@@ -18,6 +18,16 @@ The generated benchmark includes:
 
 ## Commands
 
+Run the complete benchmark suite:
+
+```powershell
+.venv\Scripts\python.exe -m docintel.cli benchmark --llm ollama --model qwen2.5:0.5b
+```
+
+This writes per-tier prediction files and `outputs\benchmark_summary.json`.
+
+## Manual Commands
+
 Regenerate the dataset:
 
 ```powershell
